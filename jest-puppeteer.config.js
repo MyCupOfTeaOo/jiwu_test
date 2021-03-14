@@ -1,6 +1,6 @@
 module.exports = {
   launch: {
-    headless: process.env.UNHEADLESS ? false : true,
+    headless: process.env.HEADLESS ? true : false,
     defaultViewport: {
       width: 1920,
       height: 1080,
