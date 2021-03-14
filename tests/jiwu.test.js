@@ -11,7 +11,7 @@ if (!fs.existsSync(TMP_DIR)) {
 
 // 初始化,防止没有tmp目录
 
-function getPath(name) {
+function getPath(name = getCaseName()) {
   return `${TMP_DIR}/${name}.png`;
 }
 
@@ -217,36 +217,333 @@ describe('http://www.jiwu.com', () => {
     });
   });
 
-  it('YL17-置业管家顾问信息', async () => {});
-  it('YL18-置业管家跳转信息详细页', async () => {});
-  it('YL19-置业管家咨询按键', async () => {});
-  it('YL20-置业管家滚动条信息', async () => {});
+  it('YL17-价格分布趋势图', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const ele = await page.waitForXPath('/html/body/div[5]/div[1]/div[6]');
+    await page.waitForTimeout(500);
+    await ele.screenshot({
+      path: getPath(),
+    });
+  });
+  it('YL18-价格分布新房二手房切换', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const ele = await page.waitForXPath('/html/body/div[5]/div[1]/div[6]');
+    const button = await page.waitForXPath(
+      '/html/body/div[5]/div[1]/div[6]/div[2]/a[2]',
+    );
+    await button.click();
+    await page.waitForTimeout(500);
+    await ele.screenshot({
+      path: getPath(),
+    });
+  });
+  it('YL19-二手房成交信息展示数据', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const ele = await page.waitForXPath('/html/body/div[5]/div[1]/div[7]');
+    await ele.screenshot({
+      path: getPath(),
+    });
+  });
+  it('YL20-二手房成交信息查看更多跳转', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const button = await page.waitForXPath(
+      '/html/body/div[5]/div[1]/div[7]/div[1]/a',
+    );
+    await button.click();
+    await page.waitForNavigation();
+    await screenshotPage(page);
+  });
+  it('YL21-二手房成交信息翻页', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/jilu/');
+    const button = await page.waitForXPath('//*[@id="pagination"]/div/a[4]');
+    await button.click();
+    await page.waitForNavigation();
+    await screenshotPage(page);
+  });
+  it('YL22-房产快讯', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const ele = await page.waitForXPath('/html/body/div[5]/div[2]/div[1]');
+    await ele.screenshot({
+      path: getPath(),
+    });
+  });
+  it('YL23-房产快讯鼠标移动高亮', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const ele = await page.waitForXPath('/html/body/div[5]/div[2]/div[1]');
+    const button = await page.waitForXPath(
+      '/html/body/div[5]/div[2]/div[1]/ul/li[1]/a',
+    );
+    const box = await button.boundingBox();
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await ele.screenshot({
+      path: getPath(),
+    });
+  });
+  it('YL24-房产快讯点击跳转', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const button = await page.waitForXPath(
+      '/html/body/div[5]/div[2]/div[1]/ul/li[1]/a',
+    );
+    const url = await (await button.getProperty('href')).jsonValue();
+    await page.goto(url);
+    await screenshotPage(page);
+  });
 
-  it('YL21-价格分布文案', async () => {});
-  it('YL22-价格分布数据', async () => {});
-  it('YL23-价格分布年份切换', async () => {});
-  it('YL24-价格分布新房二手房切换', async () => {});
-  it('YL25-价格分布趋势图', async () => {});
-  it('YL26-二手房成交信息展示数据', async () => {});
-  it('YL27-二手房成交信息跳转', async () => {});
-  it('YL28-房产快讯文案', async () => {});
-  it('YL29-房产快讯显示', async () => {});
-  it('YL30-房产快讯和详细页区别', async () => {});
-  it('YL31-房产快讯点击跳转', async () => {});
-  it('YL32-房产快讯鼠标移动高亮', async () => {});
-  it('YL33-优选新房文案', async () => {});
-  it('YL34-优选新房显示', async () => {});
-  it('YL35-优选新房和详细页区别', async () => {});
-  it('YL36-优选新房蹄片缩略图', async () => {});
-  it('YL37-优选新房缩略图标签', async () => {});
-  it('YL38-优选新房按钮', async () => {});
-  it('YL39-优选新房点击', async () => {});
-  it('YL40-优选二手房文案', async () => {});
-  it('YL41-优选二手房显示', async () => {});
-  it('YL42-优选二手房和详细页区别', async () => {});
-  it('YL43-优选二手房图片缩略图线', async () => {});
-  it('YL44-优选二手房按钮', async () => {});
-  it('YL45-优选二手房点击', async () => {});
-  it('YL46-下载链接文案', async () => {});
-  it('YL47-下载链接跳转下载页面', async () => {});
+  it('YL25-优选新房文案', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const ele = await page.waitForXPath('/html/body/div[5]/div[2]/div[2]');
+    await ele.screenshot({
+      path: getPath(),
+    });
+  });
+  it('YL26-优选新房查看全局', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const button = await page.waitForXPath(
+      '/html/body/div[5]/div[2]/div[2]/div/a',
+    );
+    await button.click();
+    await page.waitForNavigation();
+    await screenshotPage(page);
+  });
+  it('YL27-优选新房详细页', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const button = await page.waitForXPath(
+      '/html/body/div[5]/div[2]/div[2]/ul/li[1]/a',
+    );
+    const url = await (await button.getProperty('href')).jsonValue();
+    await page.goto(url);
+    await screenshotPage(page);
+  });
+  it('YL28-优选新房详情页缩略图', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const button = await page.waitForXPath(
+      '/html/body/div[5]/div[2]/div[2]/ul/li[1]/a',
+    );
+    const url = await (await button.getProperty('href')).jsonValue();
+    await page.goto(url);
+    const thumb = await page.waitForXPath(
+      `//*[@id="lpan_banner"]/div[2]/div[3]`,
+    );
+    await thumb.screenshot({
+      path: getPath(),
+    });
+  });
+  it('YL29-优选新房详情页缩略图点击切换', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const button = await page.waitForXPath(
+      '/html/body/div[5]/div[2]/div[2]/ul/li[1]/a',
+    );
+    const url = await (await button.getProperty('href')).jsonValue();
+    await page.goto(url);
+    const thumbButton = await page.waitForXPath(
+      `//*[@id="lpan_banner"]/div[2]/div[3]/ul/li[2]/img`,
+    );
+    await thumbButton.click();
+    const ele = await page.waitForXPath(`//*[@id="lpan_banner"]`);
+    await ele.screenshot({
+      path: getPath(),
+    });
+  });
+  it('YL30-优选二手房文案', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const ele = await page.waitForXPath('/html/body/div[5]/div[2]/div[3]');
+    await ele.screenshot({
+      path: getPath(),
+    });
+  });
+  it('YL31-优选二手房查看全部', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const button = await page.waitForXPath(
+      '/html/body/div[5]/div[2]/div[3]/div/a',
+    );
+    await button.click();
+    await page.waitForNavigation();
+    await screenshotPage(page);
+  });
+  it('YL32-优选二手房详细页', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const button = await page.waitForXPath(
+      '/html/body/div[5]/div[2]/div[3]/ul/li[1]/a',
+    );
+    const url = await (await button.getProperty('href')).jsonValue();
+    await page.goto(url);
+    await screenshotPage(page);
+  });
+  it('YL33-优选二手房缩略图', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const button = await page.waitForXPath(
+      '/html/body/div[5]/div[2]/div[3]/ul/li[1]/a',
+    );
+    const url = await (await button.getProperty('href')).jsonValue();
+    await page.goto(url);
+    const thumb = await page.waitForXPath(`//*[@id="imgs-box"]/div[2]/div[2]`);
+    await thumb.screenshot({
+      path: getPath(),
+    });
+  });
+  it('YL34-优选二手房详情页缩略图点击切换', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const button = await page.waitForXPath(
+      '/html/body/div[5]/div[2]/div[3]/ul/li[1]/a',
+    );
+    const url = await (await button.getProperty('href')).jsonValue();
+    await page.goto(url);
+    const thumbButton = await page.waitForXPath(
+      `//*[@id="imgs-box"]/div[2]/div[2]/div/ul/li[2]/a/img`,
+    );
+    await thumbButton.click();
+    // 等待 effect 效果
+    await page.waitForTimeout(200);
+    const ele = await page.waitForXPath(
+      '/html/body/div[3]/div[1]/div[2]/div[1]/div[1]/div',
+    );
+    await ele.screenshot({
+      path: getPath(),
+    });
+  });
+
+  it('YL35-优选二手房关注房源', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const link = await page.waitForXPath(
+      '/html/body/div[5]/div[2]/div[3]/ul/li[1]/a',
+    );
+    const url = await (await link.getProperty('href')).jsonValue();
+    await page.goto(url);
+
+    const button = await page.waitForXPath(
+      '/html/body/div[3]/div[1]/div[1]/div[2]/span[1]/a',
+    );
+    await button.click();
+    const modal = await page.$('.pop-wrap');
+    const title = await page.evaluate(
+      (ele) => ele.textContent,
+      await modal.$('.tit'),
+    );
+    await screenshotPage(page, false);
+    expect(title).toBe('关注房源');
+  });
+  it('YL36-优选二手房获取底价', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const link = await page.waitForXPath(
+      '/html/body/div[5]/div[2]/div[3]/ul/li[1]/a',
+    );
+    const url = await (await link.getProperty('href')).jsonValue();
+    await page.goto(url);
+
+    const button = await page.waitForXPath(
+      '/html/body/div[3]/div[1]/div[1]/div[2]/span[2]/a',
+    );
+    await button.click();
+    const modal = await page.$('.pop-wrap');
+    const title = await page.evaluate(
+      (ele) => ele.textContent,
+      await modal.$('.tit'),
+    );
+    await screenshotPage(page, false);
+    expect(title).toBe('获取底价');
+  });
+  it('YL37-优选二手房预约看房', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://nj.jiwu.com/fangjia/');
+    const link = await page.waitForXPath(
+      '/html/body/div[5]/div[2]/div[3]/ul/li[1]/a',
+    );
+    const url = await (await link.getProperty('href')).jsonValue();
+    await page.goto(url);
+
+    const button = await page.waitForXPath(
+      '/html/body/div[3]/div[1]/div[2]/div[2]/div[1]/ul[2]/li[4]/a',
+    );
+    await button.click();
+    const modal = await page.$('.pop-wrap');
+    const title = await page.evaluate(
+      (ele) => ele.textContent,
+      await modal.$('.tit'),
+    );
+    await screenshotPage(page, false);
+    expect(title).toBe('预约看房');
+  });
+
+  it('YL38-置业管家顾问信息', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://suzhou.jiwu.com/zygj/');
+    await screenshotPage(page);
+  });
+  it('YL39-置业管家跳转信息详细页', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://suzhou.jiwu.com/zygj/');
+    const button = await page.waitForXPath(
+      '/html/body/div[2]/div/div[1]/div[1]/ul/li[1]/div[1]/p[1]/a[1]',
+    );
+    await button.click();
+    await page.waitForNavigation();
+    await screenshotPage(page);
+  });
+  it('YL40-置业管家咨询按键', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://suzhou.jiwu.com/zygj/');
+    const button = await page.waitForXPath(
+      '/html/body/div[2]/div/div[1]/div[1]/ul/li[1]/div[1]/p[1]/a[1]',
+    );
+    await button.click();
+    await page.waitForNavigation();
+    const zixunButton = await page.waitForXPath(
+      '/html/body/div[3]/div[1]/div[1]/div/div[1]/a',
+    );
+    await page.$eval('.panel-login', (ele) => {
+      return ele.style.display === 'none';
+    });
+    await zixunButton.click();
+    await page.$eval('.panel-login', (ele) => {
+      return ele.style.display !== 'none';
+    });
+    await screenshotPage(page, false);
+  });
+  it('YL41-置业管家滚动条信息', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://suzhou.jiwu.com/zygj/');
+    const button = await page.waitForXPath(
+      '/html/body/div[2]/div/div[1]/div[1]/ul/li[1]/div[1]/p[1]/a[1]',
+    );
+    await button.click();
+    await page.waitForNavigation();
+    const dynamicInfo = await page.waitForXPath(
+      '/html/body/div[3]/div[1]/div[2]/div',
+    );
+    await dynamicInfo.screenshot({
+      path: getPath(`${getCaseName()}-滚动前`),
+    });
+    const box = await dynamicInfo.boundingBox();
+    // 展示滚动条
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    // 按十次空格滚动
+    await Promise.all(
+      [...Array(10)].map(() => {
+        page.keyboard.press('Space');
+      }),
+    );
+    await dynamicInfo.screenshot({
+      path: getPath(),
+    });
+  });
 });
